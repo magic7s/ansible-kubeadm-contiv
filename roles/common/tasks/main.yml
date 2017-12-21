@@ -1,0 +1,15 @@
+- name: Install and Update Python
+  raw: sudo bash -c "test -e /usr/bin/python || (apt -qqy update && apt install -qy python-minimal)"
+ 
+- name: Run the equivalent of "apt-get update" as a separate step
+  apt:
+    update_cache: yes
+  become: yes
+  become_method: sudo
+
+# This may require a reboot
+- name: Update all packages to the latest version
+  apt:
+    upgrade: dist
+  become: yes
+  become_method: sudo

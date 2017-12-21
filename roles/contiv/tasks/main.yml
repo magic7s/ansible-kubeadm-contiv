@@ -1,0 +1,41 @@
+---
+
+- name: Copy contiv YAML file 
+  template: 
+    src: contiv12.yaml.j2
+    dest: /tmp/contiv.yaml
+ 
+- name: Download and Extract netctl
+  unarchive:
+    src: https://github.com/contiv/netplugin/releases/download/1.2.0/netplugin-1.2.0.tar.bz2
+    dest: /tmp
+    remote_src: yes
+        
+- name: Copy netctl to /usr/bin
+  copy:
+    src: /tmp/netctl 
+    dest: /usr/bin/netctl
+    remote_src: yes
+    mode: 0755
+      
+- name: Ensure there is a netmaster entry in /etc/hosts for this machine. Otherwise netctl doesn't work.  
+  lineinfile:
+    dest: /etc/hosts
+    line: "{{ master_ip }} netmaster"
+
+- name: Install Contiv Networking
+  command: "kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f /tmp/contiv.yaml"
+ 
+
+- name: Remove kube-dns
+  command: kubectl --kubeconfig /etc/kubernetes/admin.conf delete deployment/kube-dns -n kube-system
+
+- name: wait for netmaster to become active.
+  wait_for:
+    port: 9999
+    delay: 10
+    timeout: 900
+ 
+- pause:
+    minutes: 3
+    prompt: "Make sure network pods are started"

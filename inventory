@@ -1,0 +1,14 @@
+
+[master]
+master1 ansible_ssh_host=192.168.1.10
+
+[worker]
+192.168.1.11
+192.168.1.12
+
+
+[master:vars]
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+
+[worker:vars]
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'

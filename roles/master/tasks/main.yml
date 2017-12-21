@@ -1,0 +1,32 @@
+---
+
+- name: kubeadm init with pre generated token
+  command: kubeadm init --token {{ kubeadm_token }}
+  
+- name: wait for kubernetes to become active.
+  wait_for:
+    port: 6443
+    delay: 10
+    timeout: 300
+
+- name: allow permissive RBAC rules
+  command: "kubectl --kubeconfig /etc/kubernetes/admin.conf create clusterrolebinding permissive-binding \
+  --clusterrole=cluster-admin \
+  --user=admin \
+  --user=kubelet \
+  --group=system:serviceaccounts"
+
+- name: taint master node
+  command: kubectl --kubeconfig /etc/kubernetes/admin.conf taint nodes --all node-role.kubernetes.io/master-
+
+- name: copy config file to HOME/.kube dir
+  command: "{{ item }}"
+  with_items:
+    - mkdir -p ~{{ansible_remote_user }}/.kube
+    - cp /etc/kubernetes/admin.conf ~{{ansible_remote_user }}/.kube/config
+    - chown -R {{ ansible_remote_user }}:{{ ansible_remote_user }} ~{{ansible_remote_user }}/.kube
+    - chmod 0400 ~{{ansible_remote_user }}/.kube/config
+
+- pause:
+    minutes: 3
+    prompt: "Make sure network pods are started"

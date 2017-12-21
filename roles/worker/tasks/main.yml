@@ -1,0 +1,4 @@
+---
+
+- name: kubeadm join with pre generated token
+  command: kubeadm join --token {{ kubeadm_token }} {{ master_ip }}:6443 --discovery-token-unsafe-skip-ca-verification

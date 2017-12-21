@@ -1,0 +1,6 @@
+
+kubeadm_token: db85f7.cff657b31b20eed5
+
+master_ip: "{{ hostvars['master1']['ansible_eth0']['ipv4']['address'] }}"
+
+ansible_remote_user: ubuntu
