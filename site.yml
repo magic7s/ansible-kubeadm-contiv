@@ -1,15 +1,17 @@
 ---
 # This playbook deploys a simple kubeadm install.
 - name: Bootstrap Tasks
-  hosts: all
-  remote_user: ubuntu
+  hosts: 
+    - master
+    - worker
+  remote_user: "{{ ansible_remote_user }}"
   gather_facts: False
   roles:
     - common
 
 - name: Install Kubernetes master
   hosts: master
-  remote_user: ubuntu
+  remote_user: "{{ ansible_remote_user }}"
   become: yes
   become_method: sudo
   roles:
@@ -19,7 +21,7 @@
     - contiv
 
 - name: Install nodes
-  remote_user: ubuntu
+  remote_user: "{{ ansible_remote_user }}"
   hosts: worker
   become: yes
   become_method: sudo
@@ -27,3 +29,5 @@
     - docker
     - kubeadm
     - worker
+
+- import_playbook: contiv_network_configuration.yml

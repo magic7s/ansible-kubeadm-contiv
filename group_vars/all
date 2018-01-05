@@ -4,3 +4,29 @@ kubeadm_token: db85f7.cff657b31b20eed5
 master_ip: "{{ hostvars['master1']['ansible_eth0']['ipv4']['address'] }}"
 
 ansible_remote_user: ubuntu
+
+
+contiv_nets:
+  # This network name is required for host to access pods.
+  contivh1:
+    net_type: -n infra
+    net_sub:  -s 192.0.2.0/24
+    net_gw:   -g 192.0.2.1
+  # This is used for pods that do not have a io.contiv.network label  
+  default-net:
+    net_type: -n data
+    net_sub:  -s 172.16.10.10-172.16.10.250/24
+    net_gw:   -g 172.16.10.1
+  blue:
+    net_type: -n data
+    net_sub:  -s 172.17.0.5-172.17.15.250/20
+    net_gw:
+  green:
+    net_type: -n data
+    net_sub:  -s 172.18.0.5-172.18.15.250/20
+    net_gw:
+
+
+bgp_router_ip: 172.16.1.1
+bgp_router_as: 65000
+bgp_myas: 65001

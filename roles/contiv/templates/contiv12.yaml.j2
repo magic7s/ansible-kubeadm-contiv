@@ -1,9 +1,9 @@
----
 # Downloaded from https://raw.githubusercontent.com/contiv/netplugin/release-1.2/install/k8s/contiv/contiv.yaml
-# Modified with: sed -i -e 's/__NETMASTER_IP__/{{ master_ip }}/g' -e 's/__VLAN_IF__//g' contiv.yaml
+# Modified with: sed -e 's/__NETMASTER_IP__/{{ master_ip }}/g' -e 's/__VLAN_IF__//g' contiv.yaml
 # This ConfigMap is used to configure a self-hosted Contiv installation.
 # It can be used with an external cluster store(etcd or consul) or used
 # with the etcd instance being installed as contiv-etcd
+---
 kind: ConfigMap
 apiVersion: v1
 metadata:
@@ -13,6 +13,7 @@ data:
   contiv_mode: kubernetes
   contiv_fwdmode: routing
   contiv_netmode: vxlan
+  contiv_vlan_if: 'eth1'
   # The location of your cluster store. This is set to the
   # avdertise-client value below from the contiv-etcd service.
   # Change it to an external etcd/consul instance if required.
@@ -30,7 +31,8 @@ data:
        "K8S_CA": "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt",
        "K8S_KEY": "",
        "K8S_CERT": "",
-       "K8S_TOKEN": ""
+       "K8S_TOKEN": "",
+       "SVC_SUBNET": "10.96.0.0/12"
     }
 ---
 
@@ -105,7 +107,10 @@ spec:
             - name: CONTIV_ROLE
               value: netplugin
             - name: CONTIV_NETPLUGIN_VLAN_UPLINKS
-              value: 
+              valueFrom:
+                configMapKeyRef:
+                  name: contiv-config
+                  key: contiv_vlan_if
             - name: CONTIV_NETPLUGIN_MODE
               valueFrom:
                 configMapKeyRef:

@@ -1,0 +1,36 @@
+---
+# This playbook is used to configure basic networking options in contiv.
+# The expectation is it will run on the master host using netctl installed previously.
+# The k8 cluster should be setup and in a running state.
+# BGP Configuration is optional. Comment out BGP roles as necessary. 
+
+
+- name: Gather facts on all hosts
+  hosts: 
+    - master
+    - worker
+  remote_user: "{{ ansible_remote_user }}"
+  gather_facts: True
+  become: yes
+  become_method: sudo
+
+- name: Configure networks and BGP
+  hosts: master
+  remote_user: "{{ ansible_remote_user }}"
+  become: yes
+  become_method: sudo
+  roles:
+    - contiv_network_cfg
+    - contiv_bgp_peers
+    
+- name: Configure BGP on router
+  hosts: bgprouter
+  gather_facts: True
+  connection: local
+  vars:
+    rtr_auth:
+      username: cisco
+      host: '{{ ansible_host }}'
+  roles:
+    - bgp_iosxr
+  
