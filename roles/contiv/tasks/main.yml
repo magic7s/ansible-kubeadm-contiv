@@ -10,6 +10,9 @@
     src: https://github.com/contiv/netplugin/releases/download/1.2.0/netplugin-1.2.0.tar.bz2
     dest: /tmp
     remote_src: yes
+ # Replace this with copy the netctl bin from the container.
+ # kubectl get pods -l k8s-app=contiv-netmaster -n kube-system -o name   
+ # kubectl cp contiv-netmaster-mqvqz:/contiv/bin/netctl ./ -c contiv-netmaster -n kube-system
         
 - name: Copy netctl to /usr/bin
   copy:
@@ -26,7 +29,7 @@
 - name: Install Contiv Networking
   command: "kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f /tmp/contiv.yaml"
  
-
+# Contiv provides name resolution via the EP name. Comment this out to keep kube-dns
 - name: Remove kube-dns
   command: kubectl --kubeconfig /etc/kubernetes/admin.conf delete deployment/kube-dns -n kube-system
 
