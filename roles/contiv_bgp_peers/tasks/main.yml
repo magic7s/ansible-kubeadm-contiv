@@ -1,6 +1,6 @@
 ---
 
-- name: Add BGP Peers for Workers
+- name: Add BGP Peers
   command: > 
     netctl bgp create 
     --router-ip {{ hostvars[item]['ansible_eth0']['ipv4']['address'] }}/{{ (hostvars[item]['ansible_eth0']['ipv4']['address'] + '/' + hostvars[item]['ansible_eth0']['ipv4']['netmask']) | ipaddr('prefix') }} 
