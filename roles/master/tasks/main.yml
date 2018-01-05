@@ -1,7 +1,7 @@
 ---
 
 - name: kubeadm init with pre generated token
-  command: kubeadm init --token {{ kubeadm_token }}
+  command: kubeadm init --token {{ kubeadm_token }} --service-cidr 10.96.0.0/12
   
 - name: wait for kubernetes to become active.
   wait_for:
@@ -19,13 +19,21 @@
 - name: taint master node
   command: kubectl --kubeconfig /etc/kubernetes/admin.conf taint nodes --all node-role.kubernetes.io/master-
 
+- name: create .kube dir
+  file:
+    path: ~{{ansible_remote_user }}/.kube
+    state: directory
+    owner: "{{ ansible_remote_user }}"
+    group: "{{ ansible_remote_user }}"
+
 - name: copy config file to HOME/.kube dir
-  command: "{{ item }}"
-  with_items:
-    - mkdir -p ~{{ansible_remote_user }}/.kube
-    - cp /etc/kubernetes/admin.conf ~{{ansible_remote_user }}/.kube/config
-    - chown -R {{ ansible_remote_user }}:{{ ansible_remote_user }} ~{{ansible_remote_user }}/.kube
-    - chmod 0400 ~{{ansible_remote_user }}/.kube/config
+  copy: 
+    src: /etc/kubernetes/admin.conf
+    dest: ~{{ansible_remote_user }}/.kube/config
+    remote_src: yes
+    owner: "{{ ansible_remote_user }}"
+    group: "{{ ansible_remote_user }}"
+    mode: 0400
 
 - pause:
     minutes: 3
