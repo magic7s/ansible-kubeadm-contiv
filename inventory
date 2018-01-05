@@ -6,6 +6,8 @@ master1 ansible_ssh_host=192.168.1.10
 192.168.1.11
 192.168.1.12
 
+[bgprouter]
+rtr1 ansible_host=172.16.1.1
 
 [master:vars]
 ansible_ssh_common_args='-o StrictHostKeyChecking=no'

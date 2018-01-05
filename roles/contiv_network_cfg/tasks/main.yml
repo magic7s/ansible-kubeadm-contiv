@@ -1,0 +1,6 @@
+---
+
+- name: Configure Networks
+  command: netctl net create -t default {{ item.value.net_type }} {{ item.value.net_sub }} {{ item.value.net_gw }} {{ item.key }} 
+  with_dict: "{{ contiv_nets }}"
+  
