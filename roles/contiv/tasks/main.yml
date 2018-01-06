@@ -20,9 +20,9 @@
 
 - name: Get Netmaster pod name
   command: >
-        kubectl --kubeconfig /etc/kubernetes/admin.conf get pods -o go-template 
-        --template '{{ '{{' }}range .items{{ '}}{{' }}.metadata.name{{ '}}{{' }}"\n"{{ '}}{{' }}end{{ '}}' }}' 
-        -l k8s-app=contiv-netmaster -n kube-system
+        {%raw%}kubectl --kubeconfig /etc/kubernetes/admin.conf get pods -o go-template 
+        --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' 
+        -l k8s-app=contiv-netmaster -n kube-system{%endraw%}
   register: netmaster_container_name
     
 - name: Extract netctl from container     
