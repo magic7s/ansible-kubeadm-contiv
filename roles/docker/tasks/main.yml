@@ -8,11 +8,8 @@
 - name: add remote user to group docker
   command: usermod -aG docker {{ansible_user}}
 
-#- name: Start docker service
-#  systemd:
-#    name: docker
-#    state: restarted
-#    enabled: yes
-
-- name: enable if command above does strange things (debug me)
-  command: systemctl enable docker
+- name: Start docker service
+  service:
+    name: docker
+    state: restarted
+    enabled: yes
