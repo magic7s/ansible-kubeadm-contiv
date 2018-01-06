@@ -5,27 +5,6 @@
     src: contiv12.yaml.j2
     dest: /tmp/contiv.yaml
  
-- name: Download and Extract netctl
-  unarchive:
-    src: https://github.com/contiv/netplugin/releases/download/1.2.0/netplugin-1.2.0.tar.bz2
-    dest: /tmp
-    remote_src: yes
- # Replace this with copy the netctl bin from the container.
- # kubectl get pods -l k8s-app=contiv-netmaster -n kube-system -o name   
- # kubectl cp contiv-netmaster-mqvqz:/contiv/bin/netctl ./ -c contiv-netmaster -n kube-system
-        
-- name: Copy netctl to /usr/bin
-  copy:
-    src: /tmp/netctl 
-    dest: /usr/bin/netctl
-    remote_src: yes
-    mode: 0755
-      
-- name: Ensure there is a netmaster entry in /etc/hosts for this machine. Otherwise netctl doesn't work.  
-  lineinfile:
-    dest: /etc/hosts
-    line: "{{ master_ip }} netmaster"
-
 - name: Install Contiv Networking
   command: "kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f /tmp/contiv.yaml"
  
@@ -38,7 +17,29 @@
     port: 9999
     delay: 10
     timeout: 900
+
+- name: Get Netmaster pod name
+  command: >
+        kubectl --kubeconfig /etc/kubernetes/admin.conf get pods -o go-template 
+        --template '{{ '{{' }}range .items{{ '}}{{' }}.metadata.name{{ '}}{{' }}"\n"{{ '}}{{' }}end{{ '}}' }}' 
+        -l k8s-app=contiv-netmaster -n kube-system
+  register: netmaster_container_name
+    
+- name: Extract netctl from container     
+  command: kubectl --kubeconfig /etc/kubernetes/admin.conf cp {{ netmaster_container_name.stdout }}:/contiv/bin/netctl /tmp -c contiv-netmaster -n kube-system
+        
+- name: Copy netctl to /usr/bin
+  copy:
+    src: /tmp/netctl 
+    dest: /usr/bin/netctl
+    remote_src: yes
+    mode: 0755
+      
+- name: Ensure there is a netmaster entry in /etc/hosts for this machine. Otherwise netctl doesn't work.  
+  lineinfile:
+    dest: /etc/hosts
+    line: "{{ master_ip }} netmaster"
  
 - pause:
-    minutes: 3
+    minutes: 2
     prompt: "Make sure network pods are started"
