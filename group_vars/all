@@ -5,6 +5,7 @@ master_ip: "{{ hostvars['master1']['ansible_eth0']['ipv4']['address'] }}"
 
 ansible_remote_user: ubuntu
 
+kubeadm_reset_before_init: true
 
 contiv_nets:
   # This network name is required for host to access pods.
