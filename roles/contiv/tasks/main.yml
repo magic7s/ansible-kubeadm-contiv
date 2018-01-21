@@ -14,31 +14,12 @@
   with_items:
     - delete deployment/kube-dns -n kube-system
     - delete svc kube-dns -n kube-system
-    
 
 - name: wait for netmaster to become active.
   wait_for:
     port: 9999
     delay: 10
     timeout: 900
-
-# Latest netplugin mounts and copies netctl to host dir. This is no longer needed.
-#- name: Get Netmaster pod name
-#  command: >
-#        {%raw%}kubectl --kubeconfig /etc/kubernetes/admin.conf get pods -o go-template 
-#        --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' 
-#        -l k8s-app=contiv-netmaster -n kube-system{%endraw%}
-#  register: netmaster_container_name
-    
-#- name: Extract netctl from container     
-#  command: kubectl --kubeconfig /etc/kubernetes/admin.conf cp {{ netmaster_container_name.stdout }}:/contiv/bin/netctl /tmp -c contiv-netmaster -n kube-system
-        
-#- name: Copy netctl to /usr/bin
-#  copy:
-#    src: /tmp/netctl 
-#    dest: /usr/bin/netctl
-#    remote_src: yes
-#    mode: 0755
       
 - name: Ensure there is a netmaster entry in /etc/hosts for this machine. Otherwise netctl doesn't work.  
   lineinfile:
