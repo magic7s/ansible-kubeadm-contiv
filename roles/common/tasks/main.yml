@@ -13,3 +13,11 @@
     upgrade: dist
   become: yes
   become_method: sudo
+  
+- name: install basic packages
+  apt: package={{ item }}  update_cache=yes
+  with_items:
+    - jq
+    - tree
+  become: yes
+  become_method: sudo
