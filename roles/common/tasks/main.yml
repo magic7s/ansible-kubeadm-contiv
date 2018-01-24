@@ -19,5 +19,6 @@
   with_items:
     - jq
     - tree
+    - python-yaml
   become: yes
   become_method: sudo
