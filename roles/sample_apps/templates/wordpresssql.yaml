@@ -1,3 +1,33 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: wp-pv-volume1
+  labels:
+    app: wordpress
+    type: local
+spec:
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/tmp/wordpress-data1"
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: wp-pv-volume2
+  labels:
+    app: wordpress
+    type: local
+spec:
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/tmp/wordpress-data2"
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -23,7 +53,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 20Gi
+      storage: 2Gi
 ---
 apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
 kind: Deployment
@@ -63,6 +93,7 @@ spec:
       - name: mysql-persistent-storage
         persistentVolumeClaim:
           claimName: mysql-pv-claim
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -88,7 +119,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 20Gi
+      storage: 2Gi
 ---
 apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
 kind: Deployment

@@ -1,12 +1,17 @@
 ---
+- name: Remove app if exists
+  shell: if [ -e /tmp/wordpresssql.yaml ]; then kubectl --kubeconfig /etc/kubernetes/admin.conf delete -f /tmp/wordpresssql.yaml; else echo "Existing file not found"; fi
+
 - name: Copy WordPressSQL YAML to host
   template:
     src: wordpresssql.yaml
     dest: /tmp/wordpresssql.yaml
 
-
 - name: Create SQL Secret
-  command: "kubectl --kubeconfig /etc/kubernetes/admin.conf create secret generic mysql-pass --from-literal=password=YOUR_PASSWORD"
+  command: "kubectl --kubeconfig /etc/kubernetes/admin.conf {{ item }}"
+  with_items:
+    - "delete secret mysql-pass"
+    - "create secret generic mysql-pass --from-literal=password=YOUR_PASSWORD"
 
 - name: Deploying Wordpress SQL
   command: "kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f /tmp/wordpresssql.yaml"
