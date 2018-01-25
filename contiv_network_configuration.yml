@@ -21,7 +21,7 @@
   become_method: sudo
   roles:
     - contiv_network_cfg
-    - contiv_bgp_peers
+    - { role: contiv_bgp_peers, when: run_bgp_tasks }
     
 - name: Configure BGP on router
   hosts: bgprouter
@@ -32,5 +32,5 @@
       username: cisco
       host: '{{ ansible_host }}'
   roles:
-    - bgp_iosxr
+    - { role: bgp_iosxr, when: run_bgp_tasks }
   
