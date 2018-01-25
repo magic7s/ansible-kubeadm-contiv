@@ -1,9 +1,15 @@
 ---
+- name: Copy files from contiv/netplugin on github
+  get_url:
+    url: "{{ item }}"
+    dest: /tmp/
+    mode: 0755
+  with_items:
+      - https://raw.githubusercontent.com/contiv/netplugin/master/install/k8s/contiv/contiv-compose
+      - https://raw.githubusercontent.com/contiv/netplugin/master/install/k8s/contiv/contiv-base.yaml
 
-- name: Copy contiv YAML file 
-  template: 
-    src: contiv-base.yaml.j2
-    dest: /tmp/contiv.yaml
+- name: Contiv Compose
+  shell: /tmp/contiv-compose use-release --k8s-api https://{{ master_ip }}:6443 /tmp/contiv-base.yaml > /tmp/contiv.yaml
  
 - name: Install Contiv Networking
   command: "kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f /tmp/contiv.yaml"
