@@ -1,0 +1,9 @@
+---
+- name: Copy Guestbook YAML to host
+  template:
+    src: guestbook.yaml
+    dest: /tmp/guestbook.yaml
+
+- name: Deploying PHP Guestbook application with Redis
+  command: "kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f /tmp/guestbook.yaml"
+
