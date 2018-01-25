@@ -1,4 +1,7 @@
 ---
+- name: Remove app if exists
+  shell: if [ -e /tmp/guestbook.yaml ]; then kubectl --kubeconfig /etc/kubernetes/admin.conf delete -f /tmp/guestbook.yaml; else echo "Existing file not found"; fi
+  
 - name: Copy Guestbook YAML to host
   template:
     src: guestbook.yaml

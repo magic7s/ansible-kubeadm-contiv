@@ -4,4 +4,4 @@
   become: yes
   become_method: sudo
   roles:
-    - sample_apps
+    - { role: sample_apps, when: deploy_sample_apps }
