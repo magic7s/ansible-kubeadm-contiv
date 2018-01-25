@@ -33,3 +33,5 @@ run_bgp_tasks: false
 bgp_router_ip: 172.16.1.1
 bgp_router_as: 65000
 bgp_myas: 65001
+
+deploy_sample_apps: true
