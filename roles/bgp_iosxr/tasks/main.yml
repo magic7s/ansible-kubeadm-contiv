@@ -9,3 +9,4 @@
   with_items:
     - "{{ groups['master'] }}"
     - "{{ groups['worker'] }}"
+  when: run_bgp_tasks
