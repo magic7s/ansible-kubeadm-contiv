@@ -40,7 +40,7 @@ spec:
   selector:
     app: wordpress
     tier: mysql
-  clusterIP: None
+  type: clusterIP
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
