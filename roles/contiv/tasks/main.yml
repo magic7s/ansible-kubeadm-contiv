@@ -20,6 +20,10 @@
   with_items:
     - delete deployment/kube-dns -n kube-system
     - delete svc kube-dns -n kube-system
+    - delete serviceaccounts kube-dns -n kube-system
+    - delete clusterrolebindings system:kube-dns -n kube-system
+    - delete endpoint kube-dns -n kube-system
+  ignore_errors: yes
 
 - name: wait for netmaster to become active.
   wait_for:

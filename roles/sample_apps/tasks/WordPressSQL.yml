@@ -12,6 +12,7 @@
   with_items:
     - "delete secret mysql-pass"
     - "create secret generic mysql-pass --from-literal=password=YOUR_PASSWORD"
+  ignore_errors: yes
 
 - name: Deploying Wordpress SQL
   command: "kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f /tmp/wordpresssql.yaml"
