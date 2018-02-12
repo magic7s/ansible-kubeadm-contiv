@@ -13,3 +13,9 @@
     name: docker
     state: restarted
     enabled: yes
+  
+# This is needed based on Docker 1.13 update. Kubernetes and/or CNI could also fix this.  
+- name: Reenable ipchains FORWARD
+  iptables:
+    chain: FORWARD
+    policy: ACCEPT
