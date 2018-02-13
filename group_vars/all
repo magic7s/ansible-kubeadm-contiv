@@ -21,11 +21,11 @@ contiv_nets:
   blue:
     net_type: -n data
     net_sub:  -s 172.17.0.5-172.17.15.250/20
-    net_gw:
+    net_gw:   -g 172.17.0.1
   green:
     net_type: -n data
     net_sub:  -s 172.18.0.5-172.18.15.250/20
-    net_gw:
+    net_gw:   -g 172.18.0.1
 
 
 run_bgp_tasks: false
