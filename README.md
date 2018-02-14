@@ -3,7 +3,6 @@
 ### Orignal code credit goes to https://github.com/ben-st/ansible-kubeadm. I used it as a base and changed the CNI to Contiv (by Cisco).
 
 - Requires Ansible 2.4 or newer
-- Python netaddr 'pip install netaddr'
 - Expects 3 ubuntu nodes (at least 16.04)
 - Expects passwordless sudo
 
