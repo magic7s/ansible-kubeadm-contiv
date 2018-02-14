@@ -14,23 +14,11 @@
   become: yes
   become_method: sudo
 
-- name: Configure networks and BGP
+- name: Configure networks
   hosts: master
   remote_user: "{{ ansible_remote_user }}"
   become: yes
   become_method: sudo
   roles:
     - contiv_network_cfg
-    - { role: contiv_bgp_peers, when: run_bgp_tasks }
     
-- name: Configure BGP on router
-  hosts: bgprouter
-  gather_facts: True
-  connection: local
-  vars:
-    rtr_auth:
-      username: cisco
-      host: '{{ ansible_host }}'
-  roles:
-    - { role: bgp_iosxr, when: run_bgp_tasks }
-  
