@@ -1,4 +1,19 @@
 ---
+
+- name: Create Policy Groups
+  command: netctl policy create {{ item.value.policy_name }}
+  with_dict: "{{ contiv_groups }}"
+
+- name: Configure Endpoint Groups
+  command: netctl group create {{ item.value.network_name }} {{ item.key }} -p {{ item.value.policy_name }}
+  with_dict: "{{ contiv_groups }}"
+ 
+- name: Create Policy Rules
+  command: netctl policy rule-add {{ item.0.policy_name }} {{ item.1 }}
+  with_subelements: 
+    - "{{ contiv_groups }}"
+    - policy_rules
+
 - name: Remove app if exists
   shell: if [ -e /tmp/wordpresssql.yaml ]; then kubectl --kubeconfig /etc/kubernetes/admin.conf delete -f /tmp/wordpresssql.yaml; else echo "Existing file not found"; fi
 
