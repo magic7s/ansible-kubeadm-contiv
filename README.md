@@ -16,7 +16,12 @@ Then run the playbook, like this:
 	`ansible-playbook -i inventory site.yml`
 
 
-This is a very simple playbook and could serve as a starting point for more
-complex projects.
+This is a very simple playbook. It deploys the following:
+
+1. Installs basic components (docker, kubeadm, contiv) 
+2. Basic kubernetes cluster using kubeadm (3 nodes is recommended)
+3. Contiv CNI in vxlan mode
+4. Adds three networks (see group_vars/all)
+5. Adds two sample applications (guestbook and wordpress)
 
 
