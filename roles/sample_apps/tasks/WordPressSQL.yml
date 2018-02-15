@@ -1,6 +1,30 @@
 ---
 - name: Remove app if exists
-  shell: if [ -e /tmp/wordpresssql.yaml ]; then kubectl --kubeconfig /etc/kubernetes/admin.conf delete -f /tmp/wordpresssql.yaml; else echo "Existing file not found"; fi
+  shell: if [ -e /tmp/wordpresssql.yaml ]; then kubectl --kubeconfig /etc/kubernetes/admin.conf delete -f /tmp/wordpresssql.yaml; rm /tmp/wordpresssql.yaml; else echo "Existing file not found"; fi
+
+- name: Remove Groups if exists
+  command: netctl group rm {{ item.value.epg_name }}
+  with_dict: "{{ contiv_groups['WordPressSQL'] }}"
+  ignore_errors: yes
+
+- name: Remove Policy Groups
+  command: netctl policy rm {{ item.value.policy_name }}
+  with_dict: "{{ contiv_groups['WordPressSQL'] }}"
+  ignore_errors: yes
+
+- name: Create Policy Groups
+  command: netctl policy create {{ item.value.policy_name }}
+  with_dict: "{{ contiv_groups['WordPressSQL'] }}"
+
+- name: Configure Endpoint Groups
+  command: netctl group create {{ item.value.network_name }} {{ item.value.epg_name }} -p {{ item.value.policy_name }}
+  with_dict: "{{ contiv_groups['WordPressSQL'] }}"
+ 
+- name: Create Policy Rules
+  command: netctl policy rule-add {{ item.0.policy_name }} {{ item.1 }}
+  with_subelements: 
+    - "{{ contiv_groups['WordPressSQL'] }}"
+    - policy_rules
 
 - name: Copy WordPressSQL YAML to host
   template:

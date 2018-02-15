@@ -13,6 +13,8 @@ spec:
       labels:
         app: guestbook
         tier: frontend
+        io.contiv.network: "{{ contiv_groups['PHPGuestbook']['epg-web']['network_name'] }}"
+        io.contiv.net-group: "{{ contiv_groups['PHPGuestbook']['epg-web']['epg_name'] }}"
     spec:
       containers:
       - name: php-redis
@@ -71,6 +73,8 @@ spec:
         app: redis
         role: master
         tier: backend
+        io.contiv.network: "{{ contiv_groups['PHPGuestbook']['epg-db']['network_name'] }}"
+        io.contiv.net-group: "{{ contiv_groups['PHPGuestbook']['epg-db']['epg_name'] }}"
     spec:
       containers:
       - name: master
@@ -116,6 +120,8 @@ spec:
         app: redis
         role: slave
         tier: backend
+        io.contiv.network: "{{ contiv_groups['PHPGuestbook']['epg-db']['network_name'] }}"
+        io.contiv.net-group: "{{ contiv_groups['PHPGuestbook']['epg-db']['epg_name'] }}"
     spec:
       containers:
       - name: slave

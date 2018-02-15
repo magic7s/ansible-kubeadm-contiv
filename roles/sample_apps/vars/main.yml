@@ -1,0 +1,29 @@
+contiv_groups:
+  PHPGuestbook: 
+    epg-web:
+      network_name: blue
+      epg_name: epg-blue-guestbook-web
+      policy_name: policy-blue-guestbook-web
+      policy_rules:
+        - "10 -d in -l tcp -P 80 -j allow"
+    epg-db:
+      network_name: blue
+      epg_name: epg-blue-guestbook-db
+      policy_name: policy-blue-guestbook-db
+      policy_rules:
+        - "10 -d in -g epg-blue-guestbook-web -j allow"
+        - "20 -d in -l icmp -j allow"
+  WordPressSQL:
+    epg-web:
+      network_name: blue
+      epg_name: epg-blue-wordpress-web
+      policy_name: policy-blue-wordpress-web
+      policy_rules:
+        - "10 -d in -l tcp -P 80 -j allow"
+    epg-db:
+      network_name: blue
+      epg_name: epg-blue-wordpress-db
+      policy_name: policy-blue-wordpress-db
+      policy_rules:
+        - "10 -d in -g epg-blue-wordpress-web -j allow"
+        - "20 -d in -l icmp -j allow"
