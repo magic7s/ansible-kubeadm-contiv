@@ -73,8 +73,8 @@ spec:
       labels:
         app: wordpress
         tier: mysql
-        io.contiv.network: "{{ contiv_groups['epg-blue-wordpress-db']['network_name'] }}"
-        io.contiv.net-group: "{{ contiv_groups['epg-blue-wordpress-db']['policy_name'] }}"
+        io.contiv.network: "{{ contiv_groups['WordPressSQL']['epg-db']['network_name'] }}"
+        io.contiv.net-group: "{{ contiv_groups['WordPressSQL']['epg-db']['epg_name'] }}"
     spec:
       containers:
       - image: mysql:5.6
@@ -129,8 +129,8 @@ metadata:
   name: wordpress
   labels:
     app: wordpress
-    io.contiv.network: blue
-    io.contiv.net-group: policy-blue-wordpress-web
+    io.contiv.network: "{{ contiv_groups['WordPressSQL']['epg-web']['network_name'] }}"
+    io.contiv.net-group: "{{ contiv_groups['WordPressSQL']['epg-web']['epg_name'] }}"
 spec:
   selector:
     matchLabels:
