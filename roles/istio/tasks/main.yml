@@ -1,0 +1,13 @@
+---
+# This playbook installs istio service mesh.
+
+- name: Get istio latest release version
+  shell: curl -L -s https://api.github.com/repos/istio/istio/releases/latest | grep tag_name | sed "s/ *\"tag_name\": *\"\(.*\)\",*/\1/")
+  register: istio_ver
+    
+- name: Untar istio
+  unarchive:
+    src: https://github.com/istio/istio/releases/download/{{ istio_ver }}/istio-{{ istio_ver }}-linux.tar.gz
+    dest: /tmp/
+    remote_src: yes
+

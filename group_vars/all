@@ -9,6 +9,8 @@ kubeadm_reset_before_init: true
 
 deploy_sample_apps: true
 
+deploy_istio: true
+
 contiv_nets:
   # This network name is required for host to access pods.
   contivh1:
