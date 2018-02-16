@@ -30,5 +30,5 @@
     - kubeadm
     - worker
 
-- import_playbook: contiv_network_configuration.yml
+- import_playbook: deploy_contiv_network_config.yml
 - import_playbook: deploy_sample_apps.yml
