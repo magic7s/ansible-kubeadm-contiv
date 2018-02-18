@@ -31,6 +31,6 @@
     - worker
 
 - import_playbook: deploy_contiv_network_config.yml
-- import_playbook: deploy_sample_apps.yml
 - import_playbook: deploy_istio.yml
+- import_playbook: deploy_sample_apps.yml
 
