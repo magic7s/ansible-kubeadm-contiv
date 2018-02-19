@@ -23,6 +23,7 @@
     - delete serviceaccounts kube-dns -n kube-system
     - delete clusterrolebindings system:kube-dns -n kube-system
   ignore_errors: yes
+  when: delete_kube_dns
 
 - name: wait for netmaster to become active.
   wait_for:
