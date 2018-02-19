@@ -7,7 +7,11 @@ ansible_remote_user: ubuntu
 
 kubeadm_reset_before_init: true
 
+delete_kube_dns: false
+
 deploy_sample_apps: true
+
+deploy_istio: true
 
 contiv_nets:
   # This network name is required for host to access pods.

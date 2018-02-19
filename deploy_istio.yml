@@ -1,0 +1,10 @@
+---
+# This playbook is to install istio service mesh. See istio.io for more info.
+
+- name: Deploy Istio Service Mesh
+  hosts: master
+  remote_user: "{{ ansible_remote_user }}"
+  become: yes
+  become_method: sudo
+  roles:
+    - { role: istio, when: deploy_istio }

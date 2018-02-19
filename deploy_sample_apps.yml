@@ -1,3 +1,6 @@
+---
+# This playbook installs two sample applications with contiv security groups and istio sidecars.
+
 - name: Deploy Sample Applications
   hosts: master
   remote_user: "{{ ansible_remote_user }}"

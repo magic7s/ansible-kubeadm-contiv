@@ -41,3 +41,4 @@
 - name: Deploying Wordpress SQL
   command: "kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f /tmp/wordpresssql.yaml"
 
+  

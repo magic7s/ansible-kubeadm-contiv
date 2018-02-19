@@ -1,0 +1,40 @@
+---
+
+- name: Get istio latest release version
+  shell: 'curl -L -s https://api.github.com/repos/istio/istio/releases/latest | grep tag_name | sed "s/ *\"tag_name\": *\"\(.*\)\",*/\1/"'
+  register: istio_ver
+    
+- name: Untar istio
+  unarchive:
+    src: https://github.com/istio/istio/releases/download/{{ istio_ver.stdout }}/istio-{{ istio_ver.stdout }}-linux.tar.gz
+    dest: /tmp
+    remote_src: yes
+
+- name: Copy istioctl to /usr/bin
+  copy:
+    src: /tmp/istio-{{ istio_ver.stdout }}/bin/istioctl
+    dest: /usr/bin
+    remote_src: yes
+    mode: 0755
+    owner: root
+    group: root
+
+- name: Install base Istio
+  command: "kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f /tmp/istio-{{ istio_ver.stdout }}/install/kubernetes/istio.yaml"
+  register: task_result
+  until: task_result.rc == 0
+  retries: 3
+  delay: 5
+  ignore_errors: yes
+ 
+- pause:
+    minutes: 1
+    prompt: "Make sure istio pods are started"
+    
+- name: Install Bookinfo Sample App
+  shell: "kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f <(istioctl kube-inject -f /tmp/istio-{{ istio_ver.stdout }}/samples/bookinfo/kube/bookinfo.yaml)"
+  when: deploy_sample_apps
+  
+- name: Location of Sample Files
+  debug:
+    msg: "The sample files are located at /tmp/istio-{{ istio_ver.stdout }}/samples/bookinfo/kube/"
