@@ -30,3 +30,11 @@
 - pause:
     minutes: 1
     prompt: "Make sure istio pods are started"
+    
+- name: Install Bookinfo Sample App
+  shell: "kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f <(istioctl kube-inject -f /tmp/istio-{{ istio_ver.stdout }}/samples/bookinfo/kube/bookinfo.yaml)"
+  when: deploy_sample_apps
+  
+- name: Location of Sample Files
+  debug:
+    msg: "The sample files are located at /tmp/istio-{{ istio_ver.stdout }}/samples/bookinfo/kube/"

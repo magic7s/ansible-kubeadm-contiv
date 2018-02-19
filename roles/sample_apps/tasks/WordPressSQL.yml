@@ -40,8 +40,5 @@
 
 - name: Deploying Wordpress SQL
   command: "kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f /tmp/wordpresssql.yaml"
-  when: inject_sidecar == false
+
   
-- name: Deploying Wordpress SQL with istio sidecar
-  shell: "kubectl --kubeconfig /etc/kubernetes/admin.conf create -f <(istioctl kube-inject -f /tmp/wordpresssql.yaml)"
-  when: inject_sidecar == true

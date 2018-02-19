@@ -34,8 +34,4 @@
 
 - name: Deploying PHP Guestbook application with Redis
   command: "kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f /tmp/guestbook.yaml"
-  when: inject_sidecar == false
 
-- name: Deploying PHP Guestbook application with Redis with Istio
-  shell: "kubectl --kubeconfig /etc/kubernetes/admin.conf create -f <(istioctl kube-inject -f /tmp/guestbook.yaml)"
-  when: inject_sidecar == true
